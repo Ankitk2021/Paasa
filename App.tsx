@@ -5,113 +5,100 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {PropsWithChildren} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import six from './src/assets/six.png';
+import five from './src/assets/five.png';
+import four from './src/assets/four.png';
+import three from './src/assets/three.png';
+import two from './src/assets/two.png';
+import one from './src/assets/one.png';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Image, ImageSourcePropType, SafeAreaView, Text} from 'react-native';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
+type DiceProps = PropsWithChildren<{
+  ImageUri: ImageSourcePropType;
 }>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const Dice = ({ImageUri}: DiceProps): JSX.Element => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View>
+      <Image
+        style={{height: 180, width: 180, borderRadius: 23}}
+        source={ImageUri}
+      />
     </View>
   );
-}
+};
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [DiceImg, setDiceImg] = useState<DiceProps>(two);
+  const [color, SetColor] = useState('blue');
+  function Roll() {
+    const Number = Math.floor(Math.random() * 4 + 1);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    SetColor('#' + Math.floor(Math.random() * 1000000).toString());
+
+    switch (Number) {
+      case 1:
+        setDiceImg(one);
+        break;
+      case 2:
+        setDiceImg(two);
+        break;
+      case 3:
+        setDiceImg(three);
+        break;
+      case 4:
+        setDiceImg(four);
+        break;
+      case 5:
+        setDiceImg(five);
+        break;
+      case 6:
+        setDiceImg(six);
+        break;
+
+      default:
+        setDiceImg(one);
+        break;
+    }
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <SafeAreaView>
+      <View>
+        <View style={[style.container, {backgroundColor: color}]}>
+          <Dice ImageUri={DiceImg} />
+
+          <TouchableOpacity style={style.button}>
+            <Text style={{color: 'white'}} onPress={Roll}>
+              Roll the Dice
+            </Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+const style = StyleSheet.create({
+  button: {
+    paddingVertical: 20,
+    paddingHorizontal: 36,
+    backgroundColor: 'green',
+    borderRadius: 120,
+    shadowColor: 'black',
+    shadowOffset: {height: 10, width: 10},
+    shadowOpacity: 0.2,
+    marginTop: 42,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: {
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
